@@ -7,6 +7,7 @@
 //
 
 #import "LSITipController.h"
+#import "LSITip.h"
 
 @interface LSITipController () {
     
@@ -20,8 +21,25 @@
 {
     if (self = [super init]) {
         _internalTips = [[NSMutableArray alloc] init];
+        
+#ifdef DEBUG  // for testing, this makes it work only during debugging
+        [self addTestData];
+#endif
     }
     return self;
+}
+
+- (void)addTestData
+{
+    [_internalTips addObject:[[LSITip alloc] initWithName:@"Sushi"
+                                                    total:200.0
+                                               splitCount:4
+                                            tipPercentage:20.0]];
+    
+    [_internalTips addObject:[[LSITip alloc] initWithName:@"Pizza"
+                                                    total:30.0
+                                               splitCount:8
+                                            tipPercentage:25]];
 }
 
 - (NSArray<LSITip *> *)tips
