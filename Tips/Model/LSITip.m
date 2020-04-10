@@ -10,4 +10,18 @@
 
 @implementation LSITip
 
+- (instancetype)initWithName:(NSString *)name
+                       total:(double)total
+                  splitCount:(int)splitCount
+               tipPercentage:(double)tipPercentage {
+    
+    if (self = [super init]) {
+        _name = name.copy;
+        _total = total;
+        _splitCount = splitCount;
+        _tipPercentage = tipPercentage;
+    }
+    return self;
+}
+
 @end
