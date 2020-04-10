@@ -17,20 +17,19 @@
 
 @implementation LSITipController
 
-- (instancetype)init
-{
+- (instancetype)init {
     if (self = [super init]) {
         _internalTips = [[NSMutableArray alloc] init];
         
 #ifdef DEBUG  // for testing, this makes it work only during debugging
+        // FIXME: Test model (remove for production)
         [self addTestData];
 #endif
     }
     return self;
 }
 
-- (void)addTestData
-{
+- (void)addTestData {
     [_internalTips addObject:[[LSITip alloc] initWithName:@"Sushi"
                                                     total:200.0
                                                splitCount:4
@@ -42,8 +41,8 @@
                                             tipPercentage:25]];
 }
 
-- (NSArray<LSITip *> *)tips
-{
+// MARK: - Convenience Accessors
+- (NSArray<LSITip *> *)tips {
     return _internalTips.copy;
 }
 
@@ -51,13 +50,11 @@
     return _internalTips.count;
 }
 
-- (LSITip *)tipAtIndex:(NSUInteger)index
-{
+- (LSITip *)tipAtIndex:(NSUInteger)index {
     return [_internalTips objectAtIndex:index]; // _internalTips[index]
 }
 
-- (void)addTip:(LSITip *)aTip
-{
+- (void)addTip:(LSITip *)aTip {
     [_internalTips addObject:aTip];
 }
 
