@@ -29,4 +29,18 @@
     return _internalTips.copy;
 }
 
+- (NSUInteger)tipCount {
+    return _internalTips.count;
+}
+
+- (LSITip *)tipAtIndex:(NSUInteger)index
+{
+    return [_internalTips objectAtIndex:index]; // _internalTips[index]
+}
+
+- (void)addTip:(LSITip *)aTip
+{
+    [_internalTips addObject:aTip];
+}
+
 @end
