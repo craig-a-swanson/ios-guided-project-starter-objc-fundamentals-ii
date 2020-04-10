@@ -7,10 +7,17 @@
 //
 
 #import "LSITipViewController.h"
+#import "LSITipController.h"
+#import "LSITip.h"
 
-@interface LSITipViewController ()
+@interface LSITipViewController () <UITableViewDataSource, UITableViewDelegate>
 
 // Private Properties
+@property (nonatomic) double total;
+@property (nonatomic) int split;
+@property (nonatomic) double percentage;
+@property (nonatomic) double tip;
+@property (nonatomic) LSITipController *tipController;
 
 // Private IBOutlets
 @property (nonatomic) IBOutlet UITextField *totalTextField;
@@ -22,6 +29,10 @@
 @property (nonatomic) IBOutlet UITableView *tableView;
 
 // Private Methods
+/// command + option + /
+- (void)calculateTip;
+- (void)updateViews;
+- (void)saveTipNamed:(NSString *)aName;
 
 @end
 
@@ -29,6 +40,14 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    self.tipController = [[LSITipController alloc] init];
+    
+    self.tableView.delegate = self;
+    self.tableView.dataSource = self;
+    
+    // Calculate the initial tip when the view is first loaded
+    [self calculateTip];
     
 }
 
@@ -48,25 +67,53 @@
 
 // MARK: - IBActions
 
+- (IBAction)updateSplit:(id)sender {
+    _split = round(_splitStepper.value);
+    [self calculateTip];
+}
+
+- (IBAction)updatePercentage:(id)sender {
+    self.percentage = round(self.percentageSlider.value);
+    [self calculateTip];
+}
+
+- (IBAction)saveTip:(id)sender {
+    [self showSaveTipAlert];
+}
 
 // TODO: Connect actions for splitChanged, sliderChanged, and Save Tip button
 
 
 // MARK: - UITableViewDataSource
 
-//- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-//}
-//
-//- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-//}
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    return _tipController.tipCount;
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"TipCell" forIndexPath:indexPath];
+    
+    LSITip *tip = [_tipController tipAtIndex:indexPath.row];
+    
+    cell.textLabel.text = tip.name;
+    
+    return cell;
+}
 
 // MARK: - UITableViewDelegate
 
-//- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 
-// TODO: Load the selected tip from the controller
+    LSITip *tip = [_tipController tipAtIndex:indexPath.row];
+    
+    _total = tip.total;
+    _split = tip.splitCount;
+    _percentage = tip.tipPercentage;
+    
+    [self updateViews];
+    [self calculateTip];
 
-//}
+}
 
 // MARK: - Alert Helper
 
